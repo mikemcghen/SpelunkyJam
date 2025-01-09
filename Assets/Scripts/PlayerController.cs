@@ -2,25 +2,33 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float maxSpeed = 2f;
-    public float jump;
-    Transform self;
-    Rigidbody2D rb;
+    public float maxSpeed = 5f;
+    public float jumpForce = 5f;
+    public Transform groundCheck;
+    public LayerMask groundLayer;
+    public float groundCheckRadius = 0.2f;
+
+    private Rigidbody2D rb;
+    private bool isGrounded;
 
     void Start()
     {
-        self = GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        if (Input.GetButtonDown("Jump") && (isGrounded || Mathf.Abs(rb.linearVelocity.y) < 0.1f))
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
     }
 
     void FixedUpdate()
     {
-        var horizontalMagnitude = Input.GetAxis("Horizontal");
-
-        rb.MovePosition(new Vector2(self.position.x, self.position.y) + (new Vector2(horizontalMagnitude, 0) * maxSpeed));
-        if (Input.GetButtonDown("Jump"))
-        {
-            rb.AddForce(new Vector2(rb.linearVelocity.x, jump));
-        }
+        float horizontalInput = Input.GetAxis("Horizontal");
+        rb.linearVelocity = new Vector2(horizontalInput * maxSpeed, rb.linearVelocity.y);
     }
 }

@@ -264,9 +264,9 @@ GameObject:
   - component: {fileID: 427933797}
   - component: {fileID: 427933799}
   - component: {fileID: 427933798}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -863,7 +863,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 15
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -958,8 +958,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540d7882210dfee4d968cff33ec1148b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 2
-  jump: 5000
+  maxSpeed: 10
+  jumpForce: 10
+  groundCheck: {fileID: 427933797}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  groundCheckRadius: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
