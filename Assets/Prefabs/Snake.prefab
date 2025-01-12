@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f8edbfa1abe124d9104d177ab86ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointA: {fileID: 0}
-  pointB: {fileID: 0}
   speed: 0
+  obstacleDetectionDistance: 0.6
+  groundDetectionDistance: 0.6
+  turnCooldown: 0.5
