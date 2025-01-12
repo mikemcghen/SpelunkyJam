@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,8 +11,6 @@ namespace Assets.Scripts
     public class RoomEditorManager : MonoBehaviour
     {
         public Tilemap Tilemap;
-
-        public TMP_InputField roomInput;
 
         public TMP_Dropdown roomSelector;
 
@@ -42,7 +42,6 @@ namespace Assets.Scripts
             if (Grid[x, y] == val)
                 return;
 
-            Debug.Log($"Setting value at ({x}, {y}) => {currentMode}");
             Grid[x, y] = val;
 
             roomRenderer.RenderRoom(Grid);
@@ -74,7 +73,7 @@ namespace Assets.Scripts
             roomRenderer.RenderRoom(Grid);
         }
 
-        public void SaveRoom()
+        public void SaveRoom(string roomName)
         {
             var room = new Room
             {
@@ -82,9 +81,21 @@ namespace Assets.Scripts
                 Height = 10,
                 Width = 10
             };
-            fileHandler.SaveRoom(room, roomInput.text);
+            fileHandler.SaveRoom(room, roomName);
             
             LoadRoomNames();
+        }
+
+        public void SaveNewRoom(){
+            var regex = new Regex(@"\d");
+            var newName = fileHandler.FetchRooms().Last();
+            var num = int.Parse(regex.Match(newName).Value) + 1;
+            SaveRoom($"room{num}");
+        }
+
+        public void OverwriteRoom(){
+            var selectedValue = roomSelector.options[roomSelector.value].text;
+            SaveRoom(selectedValue);
         }
 
         private enum EditMode
