@@ -2,41 +2,57 @@ using UnityEngine;
 
 public class SnakeController : MonoBehaviour
 {
-    public GameObject pointA;
-    public GameObject pointB;
     private Rigidbody2D rb;
-    private Animator anim;
-    private Transform currentPoint;
-    public float speed;
+    public float speed = 2f;
+    public float detectionDistance = 0.5f;
+    private Vector2 direction = Vector2.right;
+    private bool isTurning = false;
+    public float turnCooldown = 0.5f; // Cooldown before allowing another turn
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        currentPoint = pointB.transform;
-        //for animation
-        //anim.SetBool("isRunning", true);
     }
 
     void FixedUpdate()
     {
-        Vector2 point = currentPoint.position - transform.position;
-        if (currentPoint == pointB.transform)
+        // Move the snake
+        rb.linearVelocity = direction * speed;
+
+        // If already turning, don't check for new turns yet
+        if (isTurning) return;
+
+        // Check for an obstacle in front
+        RaycastHit2D obstacleHit = Physics2D.Raycast(transform.position, direction, detectionDistance);
+        if (obstacleHit.collider != null)
         {
-            rb.linearVelocity = new Vector2(speed, 0);
-        }
-        else
-        {
-            rb.linearVelocity = new Vector2(-speed, 0);
+            StartCoroutine(TurnAround());
+            return;
         }
 
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointB.transform)
+        // Check if there's ground beneath the snake
+        Vector2 downDirection = Vector2.down;
+        RaycastHit2D groundHit = Physics2D.Raycast(transform.position + (Vector3)direction * 0.5f, downDirection, detectionDistance);
+        if (groundHit.collider == null)
         {
-            currentPoint = pointA.transform;
+            StartCoroutine(TurnAround());
         }
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointA.transform)
-        {
-            currentPoint = pointB.transform;
-        }
+    }
+
+    private System.Collections.IEnumerator TurnAround()
+    {
+        isTurning = true;
+        direction = -direction; // Reverse direction
+        yield return new WaitForSeconds(turnCooldown); // Wait before allowing another turn
+        isTurning = false;
+    }
+
+    void OnDrawGizmos()
+    {
+        // Visualize the raycasts in the editor
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)direction * detectionDistance);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position + (Vector3)direction * 0.5f, transform.position + (Vector3)direction * 0.5f + Vector3.down * detectionDistance);
     }
 }
