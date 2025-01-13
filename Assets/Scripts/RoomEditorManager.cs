@@ -91,20 +91,6 @@ namespace Assets.Scripts
             LoadRoomNames();
         }
 
-        public void DoGeneration(){
-            var generator = new LevelGenerator();
-            var map = generator.GenerateMap();
-            var output = "";
-            for(var i = 0; i < map.GetLength(0); i++){
-                for(var j = 0; j < map.GetLength(1); j++){
-                    output += map[i,j]; 
-                }
-                output += "\n";
-            }
-
-            Debug.Log(output);
-        }
-
         public void SaveNewRoom(){
             var regex = new Regex(@"\d+");
             var rooms = fileHandler.FetchRooms();
