@@ -64,7 +64,7 @@ namespace Assets.Scripts {
                 }
             }
 
-            roomRenderer.RenderRoom(levelGrid);
+            roomRenderer.RenderLevel(levelGrid);
         }
 
         void UpdateDisplay(int[,] topLevelMap){
