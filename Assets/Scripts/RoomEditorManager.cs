@@ -50,6 +50,7 @@ namespace Assets.Scripts
         private int GetValue(EditMode mode) =>
             mode switch
             {
+                EditMode.Entity => 2,
                 EditMode.Ground => 1,
                 _ => 0,
             };
@@ -57,6 +58,8 @@ namespace Assets.Scripts
         public void SetModeClear() => currentMode = EditMode.Clear;
 
         public void SetModeGround() => currentMode = EditMode.Ground;
+
+        public void SetModeEntity() => currentMode = EditMode.Entity;
 
         public void LoadRoom(){
             if(roomSelector.options.Count == 0 || roomSelector.options[roomSelector.value].text == "") {
@@ -99,6 +102,7 @@ namespace Assets.Scripts
         {
             Clear,
             Ground,
+            Entity,
         }
     }
 }
