@@ -14,6 +14,8 @@ namespace Assets.Scripts
 
         public TMP_Dropdown roomSelector;
 
+        public TMP_InputField designationInput;
+
         RoomRenderer roomRenderer;
 
         RoomFileHandler fileHandler;
@@ -66,7 +68,9 @@ namespace Assets.Scripts
                 Grid = new int[10,10];
             }else {
                 var selectedValue = roomSelector.options[roomSelector.value].text;
-                Grid = fileHandler.LoadRoom(selectedValue).Grid;
+                var room = fileHandler.LoadRoom(selectedValue);
+                Grid = room.Grid;
+                designationInput.text = $"{room.Designation}";
             }
 
             roomRenderer = new RoomRenderer(Tilemap);
@@ -79,7 +83,8 @@ namespace Assets.Scripts
             {
                 Grid = Grid,
                 Height = 10,
-                Width = 10
+                Width = 10,
+                Designation = int.Parse(designationInput.text)
             };
             fileHandler.SaveRoom(room, roomName);
             
@@ -87,10 +92,13 @@ namespace Assets.Scripts
         }
 
         public void SaveNewRoom(){
-            var regex = new Regex(@"\d");
+            var regex = new Regex(@"\d+");
+            var rooms = fileHandler.FetchRooms();
+            
             var newName = fileHandler.FetchRooms().Last();
             var num = int.Parse(regex.Match(newName).Value) + 1;
-            SaveRoom($"room{num}");
+            var numStr = $"{num}".PadLeft(4, '0');
+            SaveRoom($"room{numStr}");
         }
 
         public void OverwriteRoom(){

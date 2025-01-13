@@ -9,6 +9,7 @@ namespace Assets.Scripts
     {
         public int[,] Grid;
         public int Height, Width;
+        public int Designation;
 
         // Unity's serializer is annoying: https://forum.unity.com/threads/how-i-serialize-multidimensional-arrays.988704/
         [SerializeField, HideInInspector] private List<SerializablePackage<int>> serializable;
