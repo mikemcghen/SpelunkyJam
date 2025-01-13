@@ -27,6 +27,8 @@ namespace Assets.Scripts
                 return TileResourceLoader.GetEmptySpace();
             if (gameGrid[x,y] == 1)
                 return TileResourceLoader.GetWalkableGroundMiddle();
+            if (gameGrid[x, y] == 2)
+                return TileResourceLoader.GetEntityPlaceholder();
             
             return TileResourceLoader.GetInvalid();
         }
