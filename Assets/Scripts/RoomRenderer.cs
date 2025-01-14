@@ -12,10 +12,8 @@ namespace Assets.Scripts
         public void RenderLevel(int[,] gameGrid){
             for (var i = 0; i < gameGrid.GetLength(0); i++) {
                 for (var j = 0; j < gameGrid.GetLength(1); j++) {
-                    if(gameGrid[i,j] == 0)
-                        continue;
-                        
-                    Room.SetTile(new Vector3Int(i, j, 0), GetTileForPosition(gameGrid, i, j));
+                    if(gameGrid[i,j] == 1)
+                        Room.SetTile(new Vector3Int(i, j, 0), GetTileForPosition(gameGrid, i, j));
                 }
             }
         }
@@ -40,6 +38,8 @@ namespace Assets.Scripts
                 return TileResourceLoader.GetWalkableGroundMiddle();
             if (gameGrid[x, y] == 2)
                 return TileResourceLoader.GetEntityPlaceholder();
+            if (gameGrid[x,y] == 3)
+                return TileResourceLoader.GetSpawnPoint();
             
             return TileResourceLoader.GetInvalid();
         }

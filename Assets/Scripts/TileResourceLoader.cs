@@ -22,6 +22,7 @@ namespace Assets.Scripts
         public static Tile GetPlatformMiddle() => GetTileByNumber(60);
         public static Tile GetPlatformRight() => GetTileByNumber(61);
         public static Tile GetEntityPlaceholder() => GetTileByNumber(55);
+        public static Tile GetSpawnPoint() => GetTileByNumber(32);
 
         private static Tile GetTileByNumber(int tileNum) => Resources.Load($"Tiles/{prefix}_{tileNum}", typeof(Tile)) as Tile;
     }

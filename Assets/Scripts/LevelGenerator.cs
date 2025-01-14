@@ -8,7 +8,11 @@ using Random = UnityEngine.Random;
 namespace Assets.Scripts {
     public class LevelGenerator : MonoBehaviour {
 
+        public Grid gameGrid;
+
         public Tilemap levelMap;
+
+        public GameObject playerPrefab;
 
         RoomRenderer roomRenderer;
         RoomFileHandler fileHandler;
@@ -50,6 +54,7 @@ namespace Assets.Scripts {
             var map = GenerateTopLevelMap();
             UpdateDisplay(map);
             var levelGrid = new int[40,40];
+            (int x, int y) playerPos = (-1,-1); 
 
             for(var i = 3; i >= 0; i--){
                 for(var j = 0; j < map.GetLength(1); j++){
@@ -58,13 +63,25 @@ namespace Assets.Scripts {
                     var room = roomsByType[roomType][0];
                     for(var p = 0; p < room.Grid.GetLength(0); p++){
                         for(var q = 0; q < room.Grid.GetLength(1); q++){
-                            levelGrid[j*10 + p, 39-(i*10 + q)] = room.Grid[p,9-q];
+                            var currValue = room.Grid[p, 9-q];
+                            levelGrid[j*10 + p, 39-(i*10 + q)] = currValue; 
+                            if(currValue == 3)
+                                playerPos = (j*10 + p, 39-(i*10 + q));
                         }
                     }
                 }
             }
 
+            if(playerPos == (-1, -1))
+                throw new Exception("Player position never assigned");
+
+            var coords = gameGrid.CellToWorld(new Vector3Int(playerPos.x, playerPos.y, 0));
+
+            coords.x = coords.x + 5;
+            coords.y = coords.y + 2;
+
             roomRenderer.RenderLevel(levelGrid);
+            Instantiate(playerPrefab, coords, Quaternion.identity);
         }
 
         void UpdateDisplay(int[,] topLevelMap){

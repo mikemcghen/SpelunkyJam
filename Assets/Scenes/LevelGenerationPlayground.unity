@@ -2820,7 +2820,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381df9b76696e4e429c5207e9e9f26b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameGrid: {fileID: 1468522298}
   levelMap: {fileID: 2036398859}
+  playerPrefab: {fileID: 6059307972451179348, guid: 52ab90486d5c5944abbd2b30a464e0f6, type: 3}
   label00: {fileID: 2093053944}
   label01: {fileID: 410991232}
   label02: {fileID: 1134381660}
