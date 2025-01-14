@@ -54,7 +54,8 @@ namespace Assets.Scripts
             {
                 EditMode.Entity => 2,
                 EditMode.Ground => 1,
-                _ => 0,
+                EditMode.PlayerSpawn => 3,
+                _ => -1,
             };
 
         public void SetModeClear() => currentMode = EditMode.Clear;
@@ -62,6 +63,9 @@ namespace Assets.Scripts
         public void SetModeGround() => currentMode = EditMode.Ground;
 
         public void SetModeEntity() => currentMode = EditMode.Entity;
+
+        public void SetModePlayerSpawn() => currentMode = EditMode.PlayerSpawn;
+        
 
         public void LoadRoom(){
             if(roomSelector.options.Count == 0 || roomSelector.options[roomSelector.value].text == "") {
@@ -111,6 +115,7 @@ namespace Assets.Scripts
             Clear,
             Ground,
             Entity,
+            PlayerSpawn,
         }
     }
 }
