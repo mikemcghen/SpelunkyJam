@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -14,19 +13,36 @@ namespace Assets.Scripts
 
         public TMP_Dropdown roomSelector;
 
+        public TMP_Dropdown modeSelector;
+
         public TMP_InputField designationInput;
 
         RoomRenderer roomRenderer;
 
         RoomFileHandler fileHandler;
 
-        EditMode currentMode = EditMode.Ground;
+        EditMode currentMode = EditMode.Clear;
 
         private int[,] Grid;
+        
+        string[] modes = new string[] {
+            "Clear",
+            "Ground",
+            "Entity",
+            "Player Spawn",
+            "Ladder",
+            "One-Way Platform",
+            "Ladder & Platform"
+        };
 
         void Start()
         {
             fileHandler = new RoomFileHandler();
+
+            modeSelector.options.Clear();
+            modeSelector.AddOptions(modes.ToList());
+            modeSelector.value = 0;
+
             LoadRoomNames();
             LoadRoom();
         }
@@ -52,20 +68,27 @@ namespace Assets.Scripts
         private int GetValue(EditMode mode) =>
             mode switch
             {
-                EditMode.Entity => 2,
+                EditMode.Clear => 0,
                 EditMode.Ground => 1,
+                EditMode.Entity => 2,
                 EditMode.PlayerSpawn => 3,
+                EditMode.Ladder => 4,
+                EditMode.OneWayPlatform => 5,
+                EditMode.LadderAndPlatform => 6,
                 _ => -1,
             };
 
-        public void SetModeClear() => currentMode = EditMode.Clear;
-
-        public void SetModeGround() => currentMode = EditMode.Ground;
-
-        public void SetModeEntity() => currentMode = EditMode.Entity;
-
-        public void SetModePlayerSpawn() => currentMode = EditMode.PlayerSpawn;
-        
+        public void ChangeSelectionMode() =>
+            currentMode = modeSelector.value switch {
+                0 => EditMode.Clear,
+                1 => EditMode.Ground,
+                2 => EditMode.Entity,
+                3 => EditMode.PlayerSpawn,
+                4 => EditMode.Ladder,
+                5 => EditMode.OneWayPlatform,
+                6 => EditMode.LadderAndPlatform,
+                _ => EditMode.Ground
+            };
 
         public void LoadRoom(){
             if(roomSelector.options.Count == 0 || roomSelector.options[roomSelector.value].text == "") {
@@ -97,7 +120,6 @@ namespace Assets.Scripts
 
         public void SaveNewRoom(){
             var regex = new Regex(@"\d+");
-            var rooms = fileHandler.FetchRooms();
             
             var newName = fileHandler.FetchRooms().Last();
             var num = int.Parse(regex.Match(newName).Value) + 1;
@@ -116,6 +138,9 @@ namespace Assets.Scripts
             Ground,
             Entity,
             PlayerSpawn,
+            Ladder,
+            OneWayPlatform,
+            LadderAndPlatform
         }
     }
 }
