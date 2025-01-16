@@ -99,7 +99,7 @@ namespace Assets.Scripts {
             coords.x = coords.x + 5;
             coords.y = coords.y + 2;
             
-            ladderRenderer.RenderLadders(levelGrid);
+            // ladderRenderer.RenderLadders(levelGrid);
             roomRenderer.RenderLevel(levelGrid);
             player = Instantiate(playerPrefab, coords, Quaternion.identity);
         }

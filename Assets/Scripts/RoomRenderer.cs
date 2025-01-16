@@ -20,8 +20,8 @@ namespace Assets.Scripts
                     || gameGrid[i,j] == 4
                     || gameGrid[i,j] == 6)
                         continue;
-                    
-                    Room.SetTile(new Vector3Int(i, j, 0), GetTileForPosition(gameGrid, i, j));
+                    var tile = (RuleTile)Resources.Load("Tiles/CavelunkyTile", typeof(RuleTile));
+                    Room.SetTile(new Vector3Int(i, j, 0), tile);
                 }
             }
         }
