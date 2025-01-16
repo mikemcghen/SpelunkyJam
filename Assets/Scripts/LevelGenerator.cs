@@ -11,11 +11,14 @@ namespace Assets.Scripts {
         public Grid gameGrid;
 
         public Tilemap levelMap;
+        public Tilemap ladderMap;
 
         public GameObject playerPrefab;
 
         RoomRenderer roomRenderer;
+        RoomRenderer ladderRenderer;
         RoomFileHandler fileHandler;
+        GameObject player;
 
         public TMP_Text label00;
         public TMP_Text label01;
@@ -36,7 +39,10 @@ namespace Assets.Scripts {
 
         Room[][] roomsByType;
 
+        Room[] offPathRooms;
+
         void Start(){
+            ladderRenderer = new RoomRenderer(ladderMap);
             roomRenderer = new RoomRenderer(levelMap);
             fileHandler = new RoomFileHandler();
 
@@ -47,10 +53,13 @@ namespace Assets.Scripts {
                 roomsByType[i] = rooms.Where(x => x.Designation == i).ToArray();
             }
 
+            offPathRooms = rooms.Where(x => x.Designation != 5 && x.Designation != 6).ToArray();
+
             Generate();
         }
 
         public void Generate(){
+            Destroy(player);
             var map = GenerateTopLevelMap();
             UpdateDisplay(map);
             var levelGrid = new int[40,40];
@@ -60,7 +69,17 @@ namespace Assets.Scripts {
                 for(var j = 0; j < map.GetLength(1); j++){
                     var roomType = map[i,j];
                     Debug.Log($"Getting room type: {roomType}");
-                    var room = roomsByType[roomType][0];
+
+                    Room room;
+                    
+                    if(roomType == 0){
+                        var nextVal = (int)Math.Floor(Random.value * offPathRooms.Length);
+                        room = offPathRooms[nextVal];
+                    }else{
+                        var nextVal = (int)Math.Floor(Random.value * roomsByType[roomType].Length);
+                        room = roomsByType[roomType][nextVal];
+                    }
+                    
                     for(var p = 0; p < room.Grid.GetLength(0); p++){
                         for(var q = 0; q < room.Grid.GetLength(1); q++){
                             var currValue = room.Grid[p, 9-q];
@@ -79,9 +98,10 @@ namespace Assets.Scripts {
 
             coords.x = coords.x + 5;
             coords.y = coords.y + 2;
-
+            
+            ladderRenderer.RenderLadders(levelGrid);
             roomRenderer.RenderLevel(levelGrid);
-            Instantiate(playerPrefab, coords, Quaternion.identity);
+            player = Instantiate(playerPrefab, coords, Quaternion.identity);
         }
 
         void UpdateDisplay(int[,] topLevelMap){
