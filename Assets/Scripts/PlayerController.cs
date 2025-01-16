@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private bool isLadder;
     private bool isClimbing;
     private float vertical;
+    private float horizontalInput;
     private float ladderCenterX;
     private float ladderTopY;
     private bool canRegrabLadder = true;
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
         }
 
         vertical = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxis("Horizontal");
 
         if (isLadder && Mathf.Abs(vertical) > 0f && canRegrabLadder && Mathf.Abs(transform.position.x - ladderCenterX) <= regrabDistance)
         {
@@ -57,7 +59,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
 
         if (isClimbing)
         {
@@ -75,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ladder") || collision.CompareTag("Rope"))
+        if (collision.CompareTag("Climbable"))
         {
             isLadder = true;
             ladderCenterX = collision.gameObject.transform.position.x;
@@ -87,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ladder") || collision.CompareTag("Rope"))
+        if (collision.CompareTag("Climbable"))
         {
             isLadder = false;
             isClimbing = false;
